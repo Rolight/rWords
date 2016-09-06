@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 # Create your tests here.
 from rwords.models import Dict, Example, Synonym
 from rwords.models import WordBook, WordList, authUser
+from rwords.models import Note, LearnState
 
 # 词库模型测试
 class DictModelTest(TestCase):
@@ -93,10 +94,46 @@ class WorkBookModelTest(TestCase):
         self.assertEqual(WordList.objects.count(), 0)
         self.assertEqual(WordBook.objects.count(), 0)
 
-"""
-# 笔记模型测试
-class NoteTest(TestCase):
-    # 检查是否能够正确创建
-    def test_create(self):
-        user = User.objects.create_user(username='user', password='password')
-        """
+# 笔记以及学习记录模型测试
+class NoteAndLearnStateTest(TestCase):
+    create_cnt = 1
+    # 自动创建测试需要的环境
+    def create_environment(self):
+        self.user = authUser.objects.create_user(username='user%d' % self.create_cnt, password='password')
+        self.word1 = Dict.objects.create(text='apple')
+        self.word2 = Dict.objects.create(text='banana')
+        self.wordbook1 = WordBook.objects.create(author=self.user, name='book1')
+        self.wordbook2 = WordBook.objects.create(author=self.user, name='book2')
+        self.wordlist1 = WordList.objects.create(wordbook=self.wordbook1, word=self.word1)
+        self.wordlist2 = WordList.objects.create(wordbook=self.wordbook1, word=self.word2)
+        self.wordlist3 = WordList.objects.create(wordbook=self.wordbook2, word=self.word1)
+        self.wordlist4 = WordList.objects.create(wordbook=self.wordbook2, word=self.word2)
+        self.create_cnt += 1
+
+    # 检查是否能够正确创建笔记
+    def test_create_note(self):
+        self.create_environment()
+        Note.objects.create(user=self.user, word=self.wordlist1, content='My Note')
+        Note.objects.create(user=self.user, word=self.wordlist2, content='My Note1')
+        Note.objects.create(user=self.user, word=self.wordlist3, content='My Note2')
+        Note.objects.create(user=self.user, word=self.wordlist4, content='My Note3')
+        self.assertEqual(self.user.notes.count(), 4)
+        self.user.delete()
+        self.assertEqual(Note.objects.count(), 0)
+
+    # 检查创建学习记录时的初始值
+    def test_learn_state_default_val(self):
+        self.create_environment()
+        lstate = LearnState.objects.create(user=self.user, word=self.wordlist1)
+        self.assertEqual(lstate.familiar_level, 0)
+        self.assertEqual(lstate.too_simple, False)
+        self.assertEqual(lstate.learned, False)
+
+    # 检查是否能重复创建学习记录
+    def test_can_create_duplicate_learn_state(self):
+        self.create_environment()
+        lstate = LearnState.objects.create(user=self.user, word=self.wordlist1)
+        with self.assertRaises(IntegrityError):
+            lstate1 = LearnState.objects.create(user=self.user, word=self.wordlist1)
+
+

@@ -80,8 +80,12 @@ class LearnState(models.Model):
     user = models.ForeignKey(authUser, on_delete=models.CASCADE)
     word = models.ForeignKey(WordList, on_delete=models.CASCADE)
     # 熟练度
-    familiar_level = models.IntegerField(default=0, max_length=7)
+    familiar_level = models.IntegerField(default=0)
     # 太简单标记
-    to_simple = models.BooleanField(default=False)
+    too_simple = models.BooleanField(default=False)
     # 掌握标记
     learned = models.BooleanField(default=False)
+
+    class Meta:
+        # 一个用户不可能对同一本书的同一个单词有两个学习记录
+        unique_together = ('user', 'word')
