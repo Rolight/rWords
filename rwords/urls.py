@@ -17,9 +17,10 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 from .views.home import home_page
-from .views.user import login_page
+from .views.user import login_page, register_page
 
 urlpatterns = [
     url(r'^$', home_page, name='home_page'),
-    url(r'^user/login/$', login_page, name='login')
+    url(r'^user/login/$', login_page, name='login'),
+    url(r'^user/register/$', register_page, name='register')
 ]
