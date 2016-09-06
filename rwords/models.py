@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 class UserProperty(models.Model):
     # 关联的用户
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     # 正在学习的单词书
     learning_wordbook = models.ForeignKey('WordBook', on_delete=None, null=True, default=None)
     # 每日学习量
@@ -71,7 +71,7 @@ class WordList(models.Model):
 class Note(models.Model):
     # 单词表中的单词
     word = models.ForeignKey(WordList, on_delete=models.CASCADE)
-    user = models.ForeignKey(UserProperty, on_delete=models.CASCADE)
+    userproperty = models.ForeignKey(UserProperty, on_delete=models.CASCADE)
     # 笔记内容
     content = models.TextField(default='')
     # 是否共享
@@ -79,7 +79,7 @@ class Note(models.Model):
 
 #学习状态
 class LearnState(models.Model):
-    user = models.ForeignKey(UserProperty, on_delete=models.CASCADE)
+    userproperty = models.ForeignKey(UserProperty, on_delete=models.CASCADE)
     word = models.ForeignKey(WordList, on_delete=models.CASCADE)
     # 熟练度
     familiar_level = models.IntegerField(default=0)
@@ -90,4 +90,4 @@ class LearnState(models.Model):
 
     class Meta:
         # 一个用户不可能对同一本书的同一个单词有两个学习记录
-        unique_together = ('user', 'word')
+        unique_together = ('userproperty', 'word')

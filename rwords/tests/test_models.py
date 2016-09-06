@@ -101,6 +101,7 @@ class NoteAndLearnStateTest(TestCase):
     # 自动创建测试需要的环境
     def create_environment(self):
         self.user = User.objects.create_user(username='user%d' % self.create_cnt, password='password')
+        self.userproperty = UserProperty.objects.create(user=self.user)
         self.word1 = Dict.objects.create(text='apple')
         self.word2 = Dict.objects.create(text='banana')
         self.wordbook1 = WordBook.objects.create(author=self.user, name='book1')
@@ -114,18 +115,18 @@ class NoteAndLearnStateTest(TestCase):
     # 检查是否能够正确创建笔记
     def test_create_note(self):
         self.create_environment()
-        Note.objects.create(user=self.user, word=self.wordlist1, content='My Note')
-        Note.objects.create(user=self.user, word=self.wordlist2, content='My Note1')
-        Note.objects.create(user=self.user, word=self.wordlist3, content='My Note2')
-        Note.objects.create(user=self.user, word=self.wordlist4, content='My Note3')
-        self.assertEqual(self.user.notes.count(), 4)
+        Note.objects.create(userproperty=self.userproperty, word=self.wordlist1, content='My Note')
+        Note.objects.create(userproperty=self.userproperty, word=self.wordlist2, content='My Note1')
+        Note.objects.create(userproperty=self.userproperty, word=self.wordlist3, content='My Note2')
+        Note.objects.create(userproperty=self.userproperty, word=self.wordlist4, content='My Note3')
+        self.assertEqual(self.userproperty.notes.count(), 4)
         self.user.delete()
         self.assertEqual(Note.objects.count(), 0)
 
     # 检查创建学习记录时的初始值
     def test_learn_state_default_val(self):
         self.create_environment()
-        lstate = LearnState.objects.create(user=self.user, word=self.wordlist1)
+        lstate = LearnState.objects.create(userproperty=self.userproperty, word=self.wordlist1)
         self.assertEqual(lstate.familiar_level, 0)
         self.assertEqual(lstate.too_simple, False)
         self.assertEqual(lstate.learned, False)
@@ -133,8 +134,8 @@ class NoteAndLearnStateTest(TestCase):
     # 检查是否能重复创建学习记录
     def test_can_create_duplicate_learn_state(self):
         self.create_environment()
-        lstate = LearnState.objects.create(user=self.user, word=self.wordlist1)
+        lstate = LearnState.objects.create(userproperty=self.userproperty, word=self.wordlist1)
         with self.assertRaises(IntegrityError):
-            lstate1 = LearnState.objects.create(user=self.user, word=self.wordlist1)
+            lstate1 = LearnState.objects.create(userproperty=self.userproperty, word=self.wordlist1)
 
 
