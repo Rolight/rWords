@@ -1,11 +1,10 @@
 from django.test import TestCase
 from django.db.utils import IntegrityError
 from django.core.exceptions import ValidationError
-from django.contrib.auth.models import User
 
 # Create your tests here.
 from rwords.models import Dict, Example, Synonym
-from rwords.models import WordBook, WordList
+from rwords.models import WordBook, WordList, authUser
 
 # 词库模型测试
 class DictModelTest(TestCase):
@@ -62,15 +61,15 @@ class DictModelTest(TestCase):
 
 
 # 单词本模型测试
-class WorkBookModelText(TestCase):
+class WorkBookModelTest(TestCase):
     # 测试是否能够正确创建
     def test_create(self):
-        user = User.objects.create_user(username='user', password='password')
+        user = authUser.objects.create_user(username='user', password='password')
         wbook = WordBook.objects.create(author=user, name='my wordbook')
 
     # 测试多对多关系
     def test_many_to_many_relationship(self):
-        user = User.objects.create_user(username='user', password='password')
+        user = authUser.objects.create_user(username='user', password='password')
         wbook = WordBook.objects.create(author=user, name='my wordbook')
         wbook1 = WordBook.objects.create(author=user, name='my another wordbook')
         w1 = Dict.objects.create(text='w1')
@@ -94,3 +93,10 @@ class WorkBookModelText(TestCase):
         self.assertEqual(WordList.objects.count(), 0)
         self.assertEqual(WordBook.objects.count(), 0)
 
+"""
+# 笔记模型测试
+class NoteTest(TestCase):
+    # 检查是否能够正确创建
+    def test_create(self):
+        user = User.objects.create_user(username='user', password='password')
+        """
