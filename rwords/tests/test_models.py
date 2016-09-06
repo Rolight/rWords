@@ -1,10 +1,11 @@
 from django.test import TestCase
 from django.db.utils import IntegrityError
 from django.core.exceptions import ValidationError
+from django.contrib.auth.models import User
 
 # Create your tests here.
 from rwords.models import Dict, Example, Synonym
-from rwords.models import WordBook, WordList, authUser
+from rwords.models import WordBook, WordList, UserProperty
 from rwords.models import Note, LearnState
 
 # 词库模型测试
@@ -65,12 +66,12 @@ class DictModelTest(TestCase):
 class WorkBookModelTest(TestCase):
     # 测试是否能够正确创建
     def test_create(self):
-        user = authUser.objects.create_user(username='user', password='password')
+        user = User.objects.create_user(username='user', password='password')
         wbook = WordBook.objects.create(author=user, name='my wordbook')
 
     # 测试多对多关系
     def test_many_to_many_relationship(self):
-        user = authUser.objects.create_user(username='user', password='password')
+        user = User.objects.create_user(username='user', password='password')
         wbook = WordBook.objects.create(author=user, name='my wordbook')
         wbook1 = WordBook.objects.create(author=user, name='my another wordbook')
         w1 = Dict.objects.create(text='w1')
@@ -99,7 +100,7 @@ class NoteAndLearnStateTest(TestCase):
     create_cnt = 1
     # 自动创建测试需要的环境
     def create_environment(self):
-        self.user = authUser.objects.create_user(username='user%d' % self.create_cnt, password='password')
+        self.user = User.objects.create_user(username='user%d' % self.create_cnt, password='password')
         self.word1 = Dict.objects.create(text='apple')
         self.word2 = Dict.objects.create(text='banana')
         self.wordbook1 = WordBook.objects.create(author=self.user, name='book1')

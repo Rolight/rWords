@@ -2,7 +2,9 @@ from django.db import models
 from django.contrib.auth.models import User
 
 # Create your models here.
-class authUser(User):
+class UserProperty(models.Model):
+    # 关联的用户
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     # 正在学习的单词书
     learning_wordbook = models.ForeignKey('WordBook', on_delete=None, null=True, default=None)
     # 每日学习量
@@ -39,7 +41,7 @@ class WordBook(models.Model):
     # 更新日期
     update_date = models.DateField(auto_now=True, editable=False)
     # 作者
-    author = models.ForeignKey(authUser, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     # 单词书名称
     name = models.TextField(null=False, default='unnamed wordbook')
     # 单词表
@@ -69,7 +71,7 @@ class WordList(models.Model):
 class Note(models.Model):
     # 单词表中的单词
     word = models.ForeignKey(WordList, on_delete=models.CASCADE)
-    user = models.ForeignKey(authUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(UserProperty, on_delete=models.CASCADE)
     # 笔记内容
     content = models.TextField(default='')
     # 是否共享
@@ -77,7 +79,7 @@ class Note(models.Model):
 
 #学习状态
 class LearnState(models.Model):
-    user = models.ForeignKey(authUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(UserProperty, on_delete=models.CASCADE)
     word = models.ForeignKey(WordList, on_delete=models.CASCADE)
     # 熟练度
     familiar_level = models.IntegerField(default=0)
