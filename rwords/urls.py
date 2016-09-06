@@ -16,7 +16,10 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
+from .views.home import home_page
+from .views.user import login_page
+
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^', include('rwords.urls'))
+    url(r'^$', home_page, name='home_page'),
+    url(r'^user/login/$', login_page, name='login')
 ]
