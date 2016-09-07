@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %} 查看单词书 {% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-2">
+        <img src="{{ wordbook.image.url }}" class="img-rounded">
+    </div>
+    <div class="col-md-4">
+        <h4><a href="{% url 'wordbook' wordbook.id %}">{{ wordbook.name }}</a></h4>
+        <p>上传者: {{ wordbook.author.username }}</p>
+        <p>上传时间: {{ wordbook.pub_date }}</p>
+        <p>更新时间: {{ wordbook.update_date }}</p>
+        <p>单词数: {{ wordcount }}</p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>单词</th>
+                    <th>释义</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for word in wordlist %}
+                <tr>
+                    <th scope="row">{{ word.word.text }}</th>
+                    <td>{{ word.definition }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

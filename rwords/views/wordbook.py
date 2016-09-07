@@ -35,7 +35,26 @@ def wordbook_view(request, id):
     wordlist = WordList.objects.filter(wordbook=wordbook)
     return render(request, 'wordbook.html', context={
         'wordbook': wordbook,
-        'wordlist': wordlist
+        'wordlist': wordlist,
+        'wordcount': wordlist.count()
     })
 
-
+# 查看单词书库
+@login_required
+def wordbook_library_view(request, id):
+    wordbook_list = None
+    title = ''
+    id = int(id)
+    if id == 0:
+        wordbook_list = WordBook.objects.all()
+        title = '书库'
+    else:
+        user = get_object_or_404(get_user_model(), pk=id)
+        wordbook_list = WordBook.objects.filter(
+            author=user
+        )
+        title = '%s上传的单词书' % user.username
+    return render(request, 'wordbook_library.html', context={
+        'wordbook_list': wordbook_list,
+        'title': title
+    })
