@@ -6,9 +6,5 @@ from django.http import HttpResponse, HttpRequest
 from rwords.views.home import home_page
 
 class test_view_user(TestCase):
-
-    # 测试能否正常登陆
-    def test_register(self):
-        pass
-
+    pass
 

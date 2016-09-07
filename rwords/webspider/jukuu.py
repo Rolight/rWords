@@ -14,6 +14,7 @@ class WebSpider:
     resp = None
 
     def get_example(self, word):
+        print('finding example of word "%s"...' % word)
         self.opener = urllib.request.build_opener()
         self.opener.addheaders = [
             ('User-agent',
@@ -31,6 +32,7 @@ class WebSpider:
             '<tr class=e.*?</td><td>(.*?)</td>.*?<tr class=c>.*?</td><td>(.*?)</td>',
             re.S | re.M
         )
+        print("finished")
         return pattern.findall(self.content)
 
 

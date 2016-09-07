@@ -13,7 +13,8 @@ class WebSpider:
     content = None
     resp = None
 
-    def get_example(self, word):
+    def get_synonym(self, word):
+        print('finding synonyms of word "%s"' % word)
         self.opener = urllib.request.build_opener()
         self.opener.addheaders = [
             ('User-agent',
@@ -31,7 +32,8 @@ class WebSpider:
             '<li class="syn">.*?<a href=".*?">(.*?)</a>',
             re.S | re.M
         )
-        return pattern.findall(self.content)
+        print('finished')
+        return pattern.findall(self.content)[:5]
 
 
 if __name__ == '__main__':

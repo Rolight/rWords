@@ -15,9 +15,9 @@ class DictModelTest(TestCase):
         dt = Dict.objects.create(text='apple')
         self.assertEqual(dt.example_set.count(), 0)
         self.assertEqual(dt.synonym_set.count(), 0)
-        dt.example_set.create(text='eat apple')
+        dt.example_set.create(text_eng='eat apple', text_chs='吃苹果')
         dt.synonym_set.create(text='leppa')
-        self.assertEqual(dt.example_set.first().text, 'eat apple')
+        self.assertEqual(dt.example_set.first().text_eng, 'eat apple')
         self.assertEqual(dt.synonym_set.first().text, 'leppa')
 
     # 测试唯一性
@@ -37,7 +37,7 @@ class DictModelTest(TestCase):
     def test_cannot_save_empty_example(self):
         dt = Dict.objects.create(text='apple')
         with self.assertRaises(ValidationError):
-            example = Example(text='', word=dt)
+            example = Example(text_eng='', text_chs='', word=dt)
             example.full_clean()
             example.save()
 
@@ -52,7 +52,7 @@ class DictModelTest(TestCase):
     def test_on_delete_cascade(self):
         dt = Dict.objects.create(text='apple')
         synonmy = Synonym(text='lala', word=dt)
-        example = Example(text='lala', word=dt)
+        example = Example(text_eng='lala', text_chs='啦啦', word=dt)
         synonmy.save()
         example.save()
         self.assertEqual(Synonym.objects.count(), 1)

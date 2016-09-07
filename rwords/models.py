@@ -25,7 +25,8 @@ class Dict(models.Model):
 # 例句
 class Example(models.Model):
     word = models.ForeignKey(Dict, on_delete=models.CASCADE)
-    text = models.TextField(null=False, default='')
+    text_eng = models.TextField(null=False, default='')
+    text_chs = models.TextField(null=False, default='')
 
 
 # 近义词
@@ -46,6 +47,8 @@ class WordBook(models.Model):
     name = models.TextField(null=False, default='unnamed wordbook')
     # 单词表
     words = models.ManyToManyField(Dict, through='WordList')
+    # 封面
+    image = models.TextField(null=True, default='None')
 
     def __str__(self):
         return '%s from %s' % (self.name, self.author.username)
