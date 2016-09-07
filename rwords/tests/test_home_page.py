@@ -8,14 +8,14 @@ from rwords.views.home import home_page
 # 主页视图测试
 class TestHomePage(TestCase):
 
-    # 测试没有登陆时是否能够正常跳转到登陆界面
+    # 测试没有登录时是否能够正常跳转到登录界面
     def test_redirect_while_not_log_in(self):
         response = self.client.get('/')
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, '/user/login/?next=/')
 
 
-    # 测试登陆后是否能够停留在主页
+    # 测试登录后是否能够停留在主页
     # = =
     # 有时间改用mock重写
     def test_redirect_after_logging(self):

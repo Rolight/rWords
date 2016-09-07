@@ -13,7 +13,12 @@ def login_view(request):
         if form.is_valid() and form.get_user():
             login(request, form.get_user())
             return redirect(reverse('home_page'))
-    return render(request, 'login.html', context={'form': form})
+    return render(request, 'form_template.html', context={
+        'title': '用户登录',
+        'form': form,
+        'form_action': reverse('login'),
+        'submit_text': '登录'
+    })
 
 
 def register_view(request):
@@ -23,7 +28,12 @@ def register_view(request):
         if form.is_valid():
             form.save()
             return redirect(reverse('login_page'))
-    return render(request, 'register.html', context={'form': form})
+    return render(request, 'form_template.html', context={
+        'title': '用户注册',
+        'form': form,
+        'form_action': reverse('register'),
+        'submit_text': '注册'
+    })
 
 @login_required
 def logout_view(request):

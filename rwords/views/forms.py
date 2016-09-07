@@ -1,8 +1,7 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.forms import UserCreationForm, UsernameField, AuthenticationForm
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, get_user_model, password_validation
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+
 
 class RegisterForm(UserCreationForm):
 
@@ -23,3 +22,19 @@ class LoginForm(AuthenticationForm):
         super(LoginForm, self).__init__(*args, **kwargs)
         self.fields['username'].widget.attrs.update({'class': 'form-control'})
         self.fields['password'].widget.attrs.update({'class': 'form-control'})
+
+
+# 创建单词书表单
+class CreateWordBookForm(forms.Form):
+
+    name = forms.CharField(
+        widget=forms.TextInput(attrs={'required': '', 'class': 'form-control'}),
+        label='书名')
+    words_file = forms.FileField(
+        widget=forms.ClearableFileInput(attrs={'class': 'form-control'}),
+        label='单词本数据包')
+
+    image_file = forms.ImageField(
+       widget=forms.ClearableFileInput(attrs={'class': 'form-control'}),
+        label='封面图片'
+    )

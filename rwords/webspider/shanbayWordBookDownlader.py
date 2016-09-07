@@ -8,7 +8,7 @@ import pickle
 import socket
 
 class WebSpider:
-    # 登陆地址
+    # 登录地址
     login_url = "https://www.shanbay.com/accounts/login/"
     # 单词书id
     wordbook_id = 2
