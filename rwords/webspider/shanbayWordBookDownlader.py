@@ -2,7 +2,7 @@
 from http import cookiejar
 
 import sys
-import urllib
+import urllib.request
 import re
 import pickle
 import socket
@@ -20,6 +20,8 @@ class WebSpider:
     word_dict = {}
     cj = cookiejar.CookieJar()
 
+    opener = None
+
     def __init__(self, username, password):
         self.username = username
         self.password = password
@@ -35,16 +37,16 @@ class WebSpider:
             if c.name == 'csrftoken':
                 csrftokenvalue = c.value
 
-        postData = {
+        post_data = {
             'username': self.username,
             'password': self.password,
             'csrfmiddlewaretoken': csrftokenvalue
         }
 
-        print(postData)
-        postData = urllib.parse.urlencode(postData)
-        postData = postData.encode('utf-8')
-        resplogin = self.opener.open(self.login_url, data=postData)
+        print(post_data)
+        post_data = urllib.parse.urlencode(post_data)
+        post_data = post_data.encode('utf-8')
+        resplogin = self.opener.open(self.login_url, data=post_data)
         for c in self.cj:
             print(c.name, '===', c.value)
 
@@ -61,7 +63,6 @@ class WebSpider:
             if int(d[1]) % 20:
                 page += 1
             self.wordlist_url.append((url, page))
-
 
     def run(self):
         self.login_shanbay()
@@ -100,7 +101,6 @@ class WebSpider:
             re.S | re.M
         )
         return pat.findall(content)
-
 
 
 if __name__ == '__main__':
