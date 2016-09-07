@@ -27,7 +27,7 @@ def register_view(request):
         form = RegisterForm(data=request.POST)
         if form.is_valid():
             form.save()
-            return redirect(reverse('login_page'))
+            return redirect(reverse('login'))
     return render(request, 'form_template.html', context={
         'title': '用户注册',
         'form': form,

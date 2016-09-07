@@ -25,5 +25,5 @@ urlpatterns = [
     url(r'^user/login/$', login_view, name='login'),
     url(r'^user/register/$', register_view, name='register'),
     url(r'^user/logout/$', logout_view, name='logout'),
-    url(r'^wordbook/new$', create_wordbook_view, name='create_wordbook')
+    url(r'^wordbook/new/$', create_wordbook_view, name='create_wordbook')
 ]

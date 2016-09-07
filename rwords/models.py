@@ -44,11 +44,11 @@ class WordBook(models.Model):
     # 作者
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     # 单词书名称
-    name = models.TextField(null=False, default='unnamed wordbook')
+    name = models.CharField(verbose_name='单词书名称', max_length=150, default='')
     # 单词表
     words = models.ManyToManyField(Dict, through='WordList')
     # 封面
-    image = models.TextField(null=True, default='None')
+    image = models.ImageField(upload_to='bookfront/%Y/%m/%d', verbose_name='封面图片')
 
     def __str__(self):
         return '%s from %s' % (self.name, self.author.username)
