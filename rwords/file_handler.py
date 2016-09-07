@@ -20,4 +20,5 @@ def dict_file_handler(dict_file, wordbook):
             definition=wdef.replace('\n', '<br/>')
         )
         print('导入:\n%s\n %s\n成功' % (word, wdef))
+    wordbook.word_cnt = len(dlist)
 

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.urls import reverse
 
 # Create your models here.
 class UserProperty(models.Model):
@@ -52,6 +53,9 @@ class WordBook(models.Model):
 
     def __str__(self):
         return '%s from %s' % (self.name, self.author.username)
+
+    def get_absolute_url(self):
+        reverse('wordbook', args=[self.id, ])
 
 
 class WordList(models.Model):

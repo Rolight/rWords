@@ -18,12 +18,14 @@ from django.contrib import admin
 
 from .views.home import home_page
 from .views.user import login_view, register_view, logout_view
-from .views.wordbook import create_wordbook_view
+from .views.wordbook import create_wordbook_view, wordbook_view
+
 
 urlpatterns = [
     url(r'^$', home_page, name='home_page'),
     url(r'^user/login/$', login_view, name='login'),
     url(r'^user/register/$', register_view, name='register'),
     url(r'^user/logout/$', logout_view, name='logout'),
-    url(r'^wordbook/new/$', create_wordbook_view, name='create_wordbook')
+    url(r'^wordbook/new/$', create_wordbook_view, name='create_wordbook'),
+    url(r'^wordbook/(\d+)/$', wordbook_view, name='wordbook')
 ]
