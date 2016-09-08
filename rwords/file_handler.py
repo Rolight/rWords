@@ -17,16 +17,18 @@ def load_dict(file_path, wordbook, output=True, spider=True):
     try:
         data = open(file_path, 'rb')
         dlist = pickle.load(data)
+        wordlist = []
         for word, wdef in dlist.items():
             if not Dict.objects.filter(text=word):
                 Dict.objects.create(text=word)
-            WordList.objects.create(
+            wordlist.append(WordList(
                 wordbook=wordbook,
                 word=Dict.objects.get(text=word),
                 definition=wdef.replace('\n', '<br/>')
-            )
+            ))
             if output:
-                print('导入:\n%s\n %s\n成功' % (word, wdef))
+                print('找到单词:\n%s\n %s\n' % (word, wdef))
+        WordList.objects.bulk_create(wordlist)
         if output:
             print('成功导入%d个单词' % len(dlist))
         if spider:
