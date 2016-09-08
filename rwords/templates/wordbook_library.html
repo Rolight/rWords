@@ -1,7 +1,45 @@
 {% extends 'base.html' %}
 {% block title %} {{ title }} {% endblock %}
 {% block content %}
-<div class="row"><h2>{{ title }}</h2></div>
+<div class="row">
+    <div class="page-header">
+    <h2>{{ title }}</h2>
+    </div>
+</div>
+{% if learning_wordbook %}
+<div class="row">
+    <div class="page-header">
+        <h4>我正在学习的单词书</h4>
+         <div class="col-md-3">
+            <div class="thumbnail">
+                <a href="{% url 'wordbook' learning_wordbook.id %}">
+                    <img src="{{ learning_wordbook.image.url }}" class="img-rounded">
+                </a>
+                <div class="caption">
+                    <h4>
+                        <a href="{% url 'wordbook' learning_wordbook.id %}">
+                            {{ learning_wordbook.name }}
+                        </a>
+                    </h4>
+                    <p>作者:{{ learning_wordbook.author.username }}</p>
+                    <p>
+                    <a href="{% url 'wordbook_set_learning' learning_wordbook.id %}?next={{ request.path }}">
+                            <button type="button" class="btn btn-danger">
+                                不再学习
+                            </button>
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+<div class="row">
+    <div class="page-header">
+        <h4>{{ title }}</h4>
+    </div>
+</div>
     <div class="row">
         {% for wordbook in wordbook_list %}
         <div class="col-md-3">
@@ -16,6 +54,19 @@
                         </a>
                     </h4>
                     <p>作者:{{ wordbook.author.username }}</p>
+                    <p>
+                        <a href="{% url 'wordbook_set_learning' wordbook.id %}?next={{ request.path }}">
+                            {% if wordbook == learning_wordbook %}
+                            <button type="button" class="btn btn-danger">
+                                不再学习
+                            </button>
+                            {% else %}
+                            <button type="button" class="btn btn-primary">
+                                切换为这本
+                            </button>
+                            {% endif %}
+                        </a>
+                    </p>
                 </div>
             </div>
         </div>

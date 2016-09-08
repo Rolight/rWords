@@ -41,4 +41,7 @@ def logout_view(request):
         logout(request)
     return redirect(reverse('home_page'))
 
+@login_required
+def learning_setting_view(request):
+    pass
 

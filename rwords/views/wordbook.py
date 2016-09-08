@@ -4,7 +4,7 @@ from django.contrib.auth import login, logout, get_user_model
 
 from rwords.views.forms import CreateWordBookForm
 from rwords.file_handler import dict_file_handler
-from rwords.models import WordList, WordBook, Dict
+from rwords.models import WordList, WordBook, Dict, UserProperty
 
 # 创建单词书
 @login_required
@@ -33,10 +33,13 @@ def create_wordbook_view(request):
 def wordbook_view(request, id):
     wordbook = get_object_or_404(WordBook, pk=id)
     wordlist = WordList.objects.filter(wordbook=wordbook)
+    userp = get_object_or_404(UserProperty, user=request.user)
     return render(request, 'wordbook.html', context={
         'wordbook': wordbook,
         'wordlist': wordlist,
-        'wordcount': wordlist.count()
+        'wordcount': wordlist.count(),
+        'learning_wordbook': userp.learning_wordbook,
+        'userp': userp
     })
 
 # 查看单词书库
@@ -54,7 +57,22 @@ def wordbook_library_view(request, id):
             author=user
         )
         title = '%s上传的单词书' % user.username
+    userp = get_object_or_404(UserProperty, user=request.user)
     return render(request, 'wordbook_library.html', context={
         'wordbook_list': wordbook_list,
-        'title': title
+        'title': title,
+        'learning_wordbook': userp.learning_wordbook,
+        'userp': userp
     })
+
+# 设置单词书
+@login_required
+def wordbook_set_learning_view(request, id):
+    userp = get_object_or_404(UserProperty, user=request.user)
+    wordbook = get_object_or_404(WordBook, pk=id)
+    if userp.learning_wordbook == wordbook:
+        userp.learning_wordbook = None
+    else:
+        userp.learning_wordbook = wordbook
+    userp.save()
+    return redirect(request.GET['next'])

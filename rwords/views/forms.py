@@ -44,3 +44,4 @@ class CreateWordBookForm(ModelForm):
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'image': forms.ClearableFileInput(attrs={'class': 'form-control'})
         }
+# 学习设置表单

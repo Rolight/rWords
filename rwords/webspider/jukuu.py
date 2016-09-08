@@ -20,19 +20,23 @@ class WebSpider:
             ('User-agent',
             'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36')]
         socket.setdefaulttimeout(15)
-        while True:
+        re_cnt = 0
+        self.content = []
+        while re_cnt <= 20:
             try:
                 self.resp = self.opener.open(self.website_url % word)
                 self.content = self.resp.read().decode()
+                pattern = re.compile(
+                    '<tr class=e.*?</td><td>(.*?)</td>.*?<tr class=c>.*?</td><td>(.*?)</td>',
+                    re.S | re.M
+                )
+                print("finished")
                 break
             except Exception:
                 print('连接失败，正在尝试重新连接')
+                re_cnt += 1
 
-        pattern = re.compile(
-            '<tr class=e.*?</td><td>(.*?)</td>.*?<tr class=c>.*?</td><td>(.*?)</td>',
-            re.S | re.M
-        )
-        print("finished")
+
         return pattern.findall(self.content)
 
 
