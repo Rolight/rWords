@@ -8,14 +8,13 @@ import random
 from datetime import datetime
 
 
-# Create your models here.
+# 用户属性表
 class UserProperty(models.Model):
     # 关联的用户
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     # 正在学习的单词书
     learning_wordbook = models.ForeignKey('WordBook', on_delete=None, null=True, default=None)
     # 每日学习量
-    # TODO 添加数量限制
     amount = models.IntegerField(null=False, default=50)
     # 笔记
     notes = models.ManyToManyField('WordList', related_name='note_users', through='Note')
@@ -40,6 +39,40 @@ class UserProperty(models.Model):
     # 待复习单词
     def review_words(self):
         return [s.word for s in self.learnstate_set.all() if not (s.master or s.too_simple)]
+
+    # 今日待学习单词
+    def unknown_count(self, today=datetime.now().date()):
+        uc = LearnTask.get_user_tasks(user=self.user, today=today)
+        uc = uc.filter(unknown_flag=True)
+        return uc.count()
+
+    # 今日待复习单词
+    def review_count(self, today=datetime.now().date()):
+        uc = LearnTask.get_user_tasks(user=self.user, today=today)
+        uc = uc.filter(unknown_flag=False)
+        return uc.count()
+
+    # 今日总单词
+    def word_count(self, today=datetime.now().date()):
+        uc = LearnTask.get_user_tasks(user=self.user, today=today)
+        return uc.count()
+
+    # 已完成的单词
+    def finished_count(self, today=datetime.now().date()):
+        uc = LearnTask.get_user_tasks(user=self.user, today=today)
+        uc = uc.filter(finished=True)
+        return uc.count()
+
+    # 判断任务是否完成
+    def finished(self, today=datetime.now().date()):
+        uc = LearnTask.get_user_tasks(user=self.user, today=today)
+        uc = uc.filter(finished=False)
+        return uc == 0
+
+    # 判断是否是新用户
+    def newuser(self):
+        return LearnState.objects.filter(userproperty=self).count() == 0
+
 
 # 词库
 class Dict(models.Model):

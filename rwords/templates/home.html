@@ -1,4 +1,44 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div class="row">
+    <div class="jumbotron">
+        <h1>您好，{{ request.user.username }}</h1>
+        <h3>
+            今日单词
+            <span class="label label-primary">{{ userp.word_count }}</span>个,
+            新词<span class="label label-default">{{ userp.unknown_count }}</span>个，
+            复习<span class="label label-default">{{ userp.review_count }}</span>个,
+            已完成<span class="label label-success">{{ userp.finished_count }}</span>个
+        </h3>
+        {% if not userp.finished %}
+        <h3>
+            <a href="#">
+                <button type="button" class="btn btn-success btn-lg">
+                    开始学习
+                </button>
+            </a>
+        </h3>
+        {% else %}
+        <hr>
+        <h3>今日所有的学习任务都已完成！</h3>
+        {% endif %}
+        {% if userp.newuser %}
+        <h3>
+            <small>
+                新用户？
+                <a href="#">去设置学习量和单词书</a>
+            </small>
+        </h3>
+        {% elif not userp.learning_wordbook %}
+        <h3>
+            <small>
+                还没有选择单词书？
+                <a href="#">去选择</a>
+            </small>
+        </h3>
+        {% endif %}
+
+    </div>
+</div>
 {% endblock %}
