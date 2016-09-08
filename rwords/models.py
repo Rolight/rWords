@@ -15,6 +15,7 @@ class UserProperty(models.Model):
     # 正在学习的单词书
     learning_wordbook = models.ForeignKey('WordBook', on_delete=None, null=True, default=None)
     # 每日学习量
+    # TODO 添加数量限制
     amount = models.IntegerField(null=False, default=50)
     # 笔记
     notes = models.ManyToManyField('WordList', related_name='note_users', through='Note')

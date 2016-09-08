@@ -44,4 +44,15 @@ class CreateWordBookForm(ModelForm):
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'image': forms.ClearableFileInput(attrs={'class': 'form-control'})
         }
+
 # 学习设置表单
+class LearningSettingsForm(forms.Form):
+
+    error_css_class = 'has-error'
+    amount = forms.IntegerField(
+        min_value=1,
+        max_value=700,
+        label='设置新的每日学习量:',
+        widget=forms.NumberInput(attrs={'class': 'form-control'})
+    )
+

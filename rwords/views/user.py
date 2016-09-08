@@ -1,9 +1,10 @@
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, get_user_model
 
-from rwords.views.forms import RegisterForm, LoginForm
+from rwords.views.forms import RegisterForm, LoginForm, LearningSettingsForm
+from rwords.models import UserProperty
 
 
 def login_view(request):
@@ -41,7 +42,20 @@ def logout_view(request):
         logout(request)
     return redirect(reverse('home_page'))
 
+# 学习设置
 @login_required
-def learning_setting_view(request):
-    pass
+def learning_settings_view(request):
+    userp = get_object_or_404(UserProperty, user=request.user)
+    form = LearningSettingsForm()
+    if request.method == 'POST':
+        form = LearningSettingsForm(data=request.POST)
+        if form.is_valid():
+            userp.amount = form.cleaned_data['amount']
+            userp.save()
+            return redirect(reverse('learning_settings'))
+    return render(request, 'learning_settings.html', context={
+        'userp': userp,
+        'form': form,
+        'all': 0
+    })
 

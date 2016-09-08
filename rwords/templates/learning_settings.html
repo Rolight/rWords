@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %} 学习设置 {% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-4 col-md-offset-1">
+        <div class="row">
+            <div class="page-header">
+                <h3>学习设置</h3>
+            </div>
+        </div>
+        <div class="row">
+            <p>正在学习的单词书</p>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                {% if userp.learning_wordbook %}
+                <div class="thumbnail">
+                    <a href="{% url 'wordbook' userp.learning_wordbook.id %}">
+                        <img src="{{ userp.learning_wordbook.image.url }}" class="img-rounded">
+                    </a>
+                    <div class="caption">
+                        <h4>
+                            <a href="{% url 'wordbook' userp.learning_wordbook.id %}">
+                                {{ userp.learning_wordbook.name }}
+                            </a>
+                        </h4>
+                        <p>作者: {{ userp.learning_wordbook.author.username }}</p>
+                        <a href="{% url 'wordbook_library' all %}"><button type="button" class="btn btn-warning">修改</button></a>
+                    </div>
+                </div>
+                {% else %}
+                无 <a href="{% url 'wordbook_library' all  %}"><button type="button" class="btn btn-success">去挑选</button></a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <p>每日学习量: <span class="label label-primary">{{ userp.amount }}</span></p>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <form  action="{% url 'learning_settings' %}" method="post">
+                    {{ form.as_p }}
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">修改</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

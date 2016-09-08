@@ -17,7 +17,10 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 from .views.home import home_page
-from .views.user import login_view, register_view, logout_view
+from .views.user import (
+    login_view, register_view, logout_view,
+    learning_settings_view
+)
 from .views.wordbook import (
     create_wordbook_view, wordbook_view, wordbook_library_view,
     wordbook_set_learning_view
@@ -26,11 +29,14 @@ from .views.wordbook import (
 
 urlpatterns = [
     url(r'^$', home_page, name='home_page'),
+
     url(r'^user/login/$', login_view, name='login'),
     url(r'^user/register/$', register_view, name='register'),
     url(r'^user/logout/$', logout_view, name='logout'),
+    url(r'^user/learning/settings/$', learning_settings_view, name='learning_settings'),
+
     url(r'^wordbook/new/$', create_wordbook_view, name='create_wordbook'),
     url(r'^wordbook/(\d+)/$', wordbook_view, name='wordbook'),
     url(r'^wordbook/library/(\d+)/$', wordbook_library_view, name='wordbook_library'),
-    url(r'^wordbook/set/learning/(\d+)/$', wordbook_set_learning_view, name='wordbook_set_learning')
+    url(r'^wordbook/set/learning/(\d+)/$', wordbook_set_learning_view, name='set_learning_wordbook'),
 ]

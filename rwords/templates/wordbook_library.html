@@ -23,7 +23,7 @@
                     </h4>
                     <p>作者:{{ learning_wordbook.author.username }}</p>
                     <p>
-                    <a href="{% url 'wordbook_set_learning' learning_wordbook.id %}?next={{ request.path }}">
+                    <a href="{% url 'set_learning_wordbook' learning_wordbook.id %}?next={{ request.path }}">
                             <button type="button" class="btn btn-danger">
                                 不再学习
                             </button>
@@ -55,7 +55,7 @@
                     </h4>
                     <p>作者:{{ wordbook.author.username }}</p>
                     <p>
-                        <a href="{% url 'wordbook_set_learning' wordbook.id %}?next={{ request.path }}">
+                        <a href="{% url 'set_learning_wordbook' wordbook.id %}?next={{ request.path }}">
                             {% if wordbook == learning_wordbook %}
                             <button type="button" class="btn btn-danger">
                                 不再学习
