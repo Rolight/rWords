@@ -3,7 +3,6 @@ import pickle
 from rwords.models import WordBook, WordList, Dict
 from rwords.webspider.upgrade_dict import upgrade_Example, upgrade_Synonym
 
-
 def dict_file_handler(dict_file, wordbook):
     file_path = '/tmp/rwords_dict_%d.dat' % wordbook.id
     with open(file_path, 'wb+') as destination:
@@ -18,9 +17,12 @@ def load_dict(file_path, wordbook, output=True, spider=True):
         data = open(file_path, 'rb')
         dlist = pickle.load(data)
         wordlist = []
+        dicts = []
         for word, wdef in dlist.items():
             if not Dict.objects.filter(text=word):
-                Dict.objects.create(text=word)
+                dicts.append(Dict(text=word))
+        Dict.objects.bulk_create(dicts)
+        for word, wdef in dlist.items():
             wordlist.append(WordList(
                 wordbook=wordbook,
                 word=Dict.objects.get(text=word),

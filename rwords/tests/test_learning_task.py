@@ -23,11 +23,11 @@ class TestLearningTask(TestCase):
         wordbook1 = WordBook.objects.create(
             name='test1', image='a.jpg', author=user
         )
-        load_dict('../dict/test.dat', wordbook1, output=False)
+        load_dict('../dict/test.dat', wordbook1, output=False, spider=False)
         wordbook2 = WordBook.objects.create(
             name='test2', image='a.jpg', author=user
         )
-        load_dict('../dict/test.dat', wordbook2, output=False)
+        load_dict('../dict/test.dat', wordbook2, output=False, spider=False)
         return wordbook1, wordbook2
 
     # 测试用户每天想学的单词数量远大于单词书的单词数量的情况
@@ -56,7 +56,6 @@ class TestLearningTask(TestCase):
         today = datetime.now().date()
         tasks = LearnTask.get_user_tasks(user, today=today)
         self.assertEqual(tasks.count(), 10)
-        print(userp.get_diary(today))
         # 时间过得飞快，转眼间来到了9月9日
         # 用户觉得自己昨天学的太少，增加了单词数量
         userp.amount = 15
@@ -65,7 +64,6 @@ class TestLearningTask(TestCase):
         # 用户发现自己的任务表里面昨天的单词已经不见了
         # 今天的任务是全新布置的15个单词
         tasks = LearnTask.get_user_tasks(user, today=today1)
-        print(userp.get_diary(today))
         #print(userp.get_diary(today1))
         self.assertEqual(tasks.count(), 15)
         self.assertEqual(tasks.filter(build_date=today).count(), 0)

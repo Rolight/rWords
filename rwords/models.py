@@ -163,7 +163,7 @@ class LearnTask(models.Model):
     # 是否是新学习的
 
     class Meta:
-        unique_together = ('userproperty', 'word')
+        unique_together = ('userproperty', 'word', 'build_date')
 
     def get_learn_state(self):
         return LearnState.objects.get_or_create(
@@ -203,7 +203,6 @@ class LearnTask(models.Model):
         state = self.get_learn_state()
         state.too_simple = True
         state.save()
-        self.userproperty.get_diary().update()
 
     # 构造某个用户的学习计划
     @staticmethod
