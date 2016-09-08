@@ -78,7 +78,12 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, '../database/db.sqlite3'),
+    },
+    'test': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, '../database/db_test.sqlite3'),
     }
+
 }
 
 
@@ -124,3 +129,4 @@ STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, '/static'))
 LOGIN_URL = '/user/login/'
 MEDIA_ROOT = os.path.abspath(os.path.join(BASE_DIR, '../media'))
 MEDIA_URL = '/MEDIA/'
+LEARNING_COUNT = 5

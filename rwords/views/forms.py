@@ -3,7 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.forms import ModelForm
 
-from rwords.models import WordBook
+from rwords.models import WordBook, UserProperty
 
 class RegisterForm(UserCreationForm):
 
@@ -17,6 +17,10 @@ class RegisterForm(UserCreationForm):
         self.fields['username'].help_text = _(
             '少于150个字符，只支持字母数字以及@/./+/-/_ '
         )
+
+    def save(self, commit=True):
+        super(RegisterForm, self).save()
+        UserProperty.objects.create(user=self.instance)
 
 class LoginForm(AuthenticationForm):
 

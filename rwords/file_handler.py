@@ -1,6 +1,7 @@
 import pickle
 
 from rwords.models import WordBook, WordList, Dict
+from rwords.webspider.upgrade_dict import upgrade_Example, upgrade_Synonym
 
 
 def dict_file_handler(dict_file, wordbook):
@@ -8,17 +9,36 @@ def dict_file_handler(dict_file, wordbook):
     with open(file_path, 'wb+') as destination:
         for chunk in dict_file.chunks():
             destination.write(chunk)
+    load_dict(file_path, wordbook)
+
+
+def load_dict(file_path, wordbook, output=True, spider=True):
     dlist = {}
-    with open(file_path, 'rb') as data:
+    try:
+        data = open(file_path, 'rb')
         dlist = pickle.load(data)
-    for word, wdef in dlist.items():
-        if not Dict.objects.filter(text=word):
-            Dict.objects.create(text=word)
-        WordList.objects.create(
-            wordbook=wordbook,
-            word=Dict.objects.get(text=word),
-            definition=wdef.replace('\n', '<br/>')
-        )
-        print('导入:\n%s\n %s\n成功' % (word, wdef))
-    wordbook.word_cnt = len(dlist)
+        for word, wdef in dlist.items():
+            if not Dict.objects.filter(text=word):
+                Dict.objects.create(text=word)
+            WordList.objects.create(
+                wordbook=wordbook,
+                word=Dict.objects.get(text=word),
+                definition=wdef.replace('\n', '<br/>')
+            )
+            if output:
+                print('导入:\n%s\n %s\n成功' % (word, wdef))
+        if output:
+            print('成功导入%d个单词' % len(dlist))
+        if spider:
+            upgrade_dict()
+    except Exception:
+        print(Exception.with_traceback())
+        print('导入失败')
+
+def upgrade_dict():
+    print('正在更新例句库..')
+    upgrade_Example()
+    print('正在更新近义词库..')
+    upgrade_Synonym()
+
 

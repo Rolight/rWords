@@ -129,7 +129,7 @@ class NoteAndLearnStateTest(TestCase):
         lstate = LearnState.objects.create(userproperty=self.userproperty, word=self.wordlist1)
         self.assertEqual(lstate.familiar_level, 0)
         self.assertEqual(lstate.too_simple, False)
-        self.assertEqual(lstate.learned, False)
+        self.assertEqual(lstate.master, False)
 
     # 检查是否能重复创建学习记录
     def test_can_create_duplicate_learn_state(self):
