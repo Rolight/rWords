@@ -125,3 +125,5 @@ LOGIN_URL = '/user/login/'
 MEDIA_ROOT = os.path.abspath(os.path.join(BASE_DIR, '../media'))
 MEDIA_URL = '/MEDIA/'
 LEARNING_COUNT = 5
+# 设置为True在上传单词书的时候自动爬取例句信息
+AUTO_SPIDER = False

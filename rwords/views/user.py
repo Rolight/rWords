@@ -5,7 +5,7 @@ from django.contrib.auth import login, logout, get_user_model
 
 from rwords.views.forms import (
     RegisterForm, LoginForm, LearningSettingsForm,
-    NoteForm
+    NoteForm, UserPassWordChangeForm
 )
 from rwords.models import UserProperty, LearnTask, Note, LearnState
 
@@ -177,5 +177,24 @@ def user_notes_edit_view(request, id):
         note.delete()
         return redirect(reverse('user_notes'))
     raise Http404
+
+# 修改密码
+@login_required
+def change_password_view(request):
+    context = {
+        'title': '修改密码',
+        'submit_text': '确认修改',
+        'form_action': reverse('change_password')
+    }
+    form = UserPassWordChangeForm(request.user)
+    if request.method == 'POST':
+        form = UserPassWordChangeForm(request.user, data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('home_page'))
+    context['form'] = form
+    return render(request, 'form_template.html', context=context)
+
+
 
 

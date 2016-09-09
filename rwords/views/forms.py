@@ -1,6 +1,8 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import (
+    UserCreationForm, AuthenticationForm, PasswordChangeForm
+)
 from django.forms import ModelForm
 
 from rwords.models import WordBook, UserProperty
@@ -66,3 +68,12 @@ class NoteForm(forms.Form) :
     shared = forms.BooleanField(
         initial=True, label='是否共享', required=False
     )
+
+# 修改密码表单
+class UserPassWordChangeForm(PasswordChangeForm):
+
+    def __init__(self, *arg, **kwargs):
+        super(UserPassWordChangeForm, self).__init__(*arg, **kwargs)
+        self.fields['old_password'].widget.attrs.update({'class': 'form-control'})
+        self.fields['new_password1'].widget.attrs.update({'class': 'form-control'})
+        self.fields['new_password2'].widget.attrs.update({'class': 'form-control'})

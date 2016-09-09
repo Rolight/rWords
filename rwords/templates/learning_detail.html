@@ -65,6 +65,11 @@
                     {{ forloop.counter}}. {{ note.content }}
                 </small>
             </h4>
+            <h5>
+                <small>
+                    来源: {{ note.userproperty.user.username }}
+                </small>
+            </h5>
             {% endfor %}
             {% else %}
             <h4><small>无</small></h4>
