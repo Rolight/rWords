@@ -14,12 +14,19 @@ def upgrade_Example():
             continue
         # 获得例句
         examples = spider.get_example(word.text)
+        if not examples:
+            print('没找到例句')
         for example in examples:
+            if word.text not in example[0]:
+                continue
             data.append(Example(
                 word=word,
                 text_eng=example[0],
                 text_chs=example[1]
             ))
+            if len(data) >= 10:
+                Example.objects.bulk_create(data)
+                data = []
     print('writing to database')
     Example.objects.bulk_create(data)
     print('finished')

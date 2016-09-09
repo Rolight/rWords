@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
-from .views.home import home_page
+from .views.home import home_page, word_view
 from .views.user import (
     login_view, register_view, logout_view,
     learning_settings_view, learning_view, learning_state_view,
@@ -51,4 +51,5 @@ urlpatterns = [
     url(r'^wordbook/set/learning/(\d+)/$',
                                         wordbook_set_learning_view,
                                                                 name='set_learning_wordbook'),
+    url(r'^word/$',                     word_view,              name='word')
 ]

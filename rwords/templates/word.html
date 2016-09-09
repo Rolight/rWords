@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="jumbotron">
+
+        {% if word %}
+        <h2>{{ word.text }}</h2>
+        <h4>
+            <small>近义词：</small>
+            {% for syn in word.synonyms %}
+            <span class="label label-primary label-lg">{{ syn.text }}</span>
+            {% endfor %}
+        </h4>
+        <hr>
+
+        <h4>释义</h4>
+        {% for wordlist in word.wordlist_set.all %}
+        <h5><small>来自:{{ wordlist.wordbook.name }}</small></h5>
+        <h5>{{ wordlist.definition|safe }}</h5>
+        {% endfor %}
+        <hr>
+
+        <h4>例句</h4>
+        {% for example in word.examples %}
+        <h4>
+            <small>
+            {{ forloop.counter }}. {{ example.text_eng|safe }}
+            </small>
+        </h4>
+        <h4><small> {{ example.text_chs|safe }}</small></h4>
+        {% endfor %}
+
+        {% else %}
+        <h1>不存在该单词或输入有误</h1>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

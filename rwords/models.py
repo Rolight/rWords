@@ -90,7 +90,7 @@ class Dict(models.Model):
         return self.text
 
     def examples(self):
-        ret = Example.objects.filter(word=self).all()[:5]
+        ret = Example.objects.filter(word=self).all()[:10]
         return ret
 
     def synonyms(self):

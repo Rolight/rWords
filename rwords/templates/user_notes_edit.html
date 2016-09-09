@@ -3,11 +3,16 @@
 {% block content %}
 <div class="row">
     <div class="col-md-8 col-md-offset-2">
+
         {% if alter %}
-        <div class="alert alert-info" role="alert">
-            {{ alter|safe }}
-        </div>
-        {% endif %}
+         <div class="alert alert-info" role="alert">
+             修改成功，点击
+             <a href="{% url 'user_notes' %}">
+                 这里
+             </a>
+             返回
+         </div>
+         {% endif %}
         <div class="page-header">
             <h3>{{ note.word.word.text }}
                 <small>来自 {{ note.word.wordbook.name }}</small>

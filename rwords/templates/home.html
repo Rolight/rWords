@@ -37,6 +37,13 @@
                 <a href="{% url 'wordbook_library' 0 %}">去选择</a>
             </small>
         </h3>
+        {% elif not userp.word_count %}
+         <h3>
+            <small>
+                单词书学习完成？
+                <a href="{% url 'wordbook_library' 0 %}">去更换</a>
+            </small>
+        </h3>
         {% endif %}
 
     </div>

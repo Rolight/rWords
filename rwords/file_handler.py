@@ -2,6 +2,7 @@ import pickle
 
 from rwords.models import WordBook, WordList, Dict
 from rwords.webspider.upgrade_dict import upgrade_Example, upgrade_Synonym
+from django.conf import settings
 
 def dict_file_handler(dict_file, wordbook):
     file_path = '/tmp/rwords_dict_%d.dat' % wordbook.id
@@ -11,7 +12,7 @@ def dict_file_handler(dict_file, wordbook):
     load_dict(file_path, wordbook)
 
 
-def load_dict(file_path, wordbook, output=True, spider=True):
+def load_dict(file_path, wordbook, output=True, spider=False):
     dlist = {}
     try:
         data = open(file_path, 'rb')
@@ -33,7 +34,7 @@ def load_dict(file_path, wordbook, output=True, spider=True):
         WordList.objects.bulk_create(wordlist)
         if output:
             print('成功导入%d个单词' % len(dlist))
-        if spider:
+        if spider or settings.AUTO_SPIDER:
             upgrade_dict()
     except Exception:
         print(Exception.with_traceback())

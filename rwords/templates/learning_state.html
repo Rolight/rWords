@@ -32,7 +32,7 @@
                         active
                     {% endif %}
                  ">
-                    <th scope="row">{{ state.word.word.text }}</th>
+                    <th scope="row"><a href="{% url 'word' %}?word={{ state.word.word.text }}">{{ state.word.word.text }}</a></th>
                     <td>{{ state.word.wordbook.name }}</td>
                     <td>{{ state.word.definition|safe }}</td>
                     <td>{{ state.state_str }}</td>

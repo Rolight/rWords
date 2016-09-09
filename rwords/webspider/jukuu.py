@@ -4,25 +4,29 @@ import sys
 import urllib.request
 import re
 import socket
+import socks
+
+import time
 
 # 用来加密单词的js
 
 # 从句酷网爬取例句
 class WebSpider:
     # 网站地址
-    website_url = 'http://dict.youdao.com/example/blng/eng/%s/#keyfrom=dict.main.moreblng'
+    website_url = 'http://dict.youdao.com/search?q=lj:%s&ljblngcont=0&le=eng'
     opener = None
     content = None
     resp = None
 
     def get_example(self, word):
+        socks.set_default_proxy(socks.SOCKS5, 'localhost', 1080)
+        socket.socket = socks.socksocket
         print('finding example of word "%s"...' % word)
         self.opener = urllib.request.build_opener()
         self.opener.addheaders = [
             ('User-agent',
             'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36'),
         ]
-
         socket.setdefaulttimeout(15)
         re_cnt = 0
         self.content = ''

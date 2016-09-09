@@ -26,7 +26,7 @@
                 </div>
 
                 {% if request.user.is_authenticated %}
-                <div class="collapse navbar-collapse">
+                <div id="navbar" class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
                         <li><a href="{% url 'learning' %}">开始学习</a></li>
                          <li class="dropdown">
@@ -43,7 +43,14 @@
                         <li><a href="{% url 'user_notes' %}">我的笔记</a></li>
                         <li><a href="{% url 'learning_settings' %}">学习设置</a></li>
                     </ul>
+
                     <ul class="nav navbar-nav navbar-right">
+                        <form class="navbar-form navbar-left" method="get" action="{% url 'word' %}">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="word" placeholder="在这里输入要查询的单词">
+                            </div>
+                            <button type="submit" class="btn btn-default">查询</button>
+                        </form>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                 {{ request.user.username }} <span class="caret"></span>
