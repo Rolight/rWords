@@ -74,7 +74,7 @@ class UserProperty(models.Model):
         return LearnState.objects.filter(userproperty=self).count() == 0
 
     # 获得用户所有笔记
-    def notes(self):
+    def user_notes(self):
         return Note.objects.filter(userproperty=self)
 
     # 获得用户的所有学习记录

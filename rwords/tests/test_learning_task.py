@@ -6,7 +6,9 @@ from django.http import HttpResponse, HttpRequest
 from rwords.views.home import home_page
 from rwords.models import LearnState, LearnTask, WordBook, UserProperty
 from rwords.file_handler import load_dict
+
 from datetime import datetime, timedelta
+from unittest import skip
 
 
 class TestLearningTask(TestCase):
@@ -89,6 +91,8 @@ class TestLearningTask(TestCase):
         self.assertEqual(task.get_learn_state().familiar_level, 1)
 
     # 测试不认识
+    # 过时
+    @skip
     def test_unknow(self):
         w1, w2 = self.load_wordbook()
         user, userp = self.create_user('learner')
