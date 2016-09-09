@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col col-md-8 col-md-offset-2">
+        <div class="row">
+            <div class="page-header">
+                <h1>我的笔记</h1>
+                <h4><small>单击可以对笔记进行编辑</small></h4>
+            </div>
+        </div>
+        <!-- 我的笔记区域 ------------------------------------------------------->
+        <div class="row">
+            <div class="list-group">
+                {% for note in userp.user_notes %}
+                <a href="{% url 'user_notes_edit' note.id %}" class="
+                {% if note.shared %} list-group-item
+                {% else %} list-group-item list-group-item-info
+                {% endif %}
+                ">
+                    <h4>
+                        {{ forloop.counter}}. {{ note.word.word.text }}
+                        <small>来自 {{ note.word.wordbook.name }}</small>
+                    </h4>
+                    <p>{{ note.content }}</p>
+                    {% if not note.shared %}
+                    <h6>非公开笔记</h6>
+                    {% endif %}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

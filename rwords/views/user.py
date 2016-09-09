@@ -72,6 +72,8 @@ def learning_view(request):
     if task is None:
         redirect(reverse('home_page'))
     if request.method == 'GET':
+        if not task:
+            return redirect(reverse('home_page'))
         return render(request, 'learning.html', context={
             'wordlist': task.word,
             'userp': userp,
@@ -141,3 +143,39 @@ def learning_state_forget_view(request, id):
     state = get_object_or_404(LearnState, pk=id)
     state.forgot()
     return redirect(request.GET['next'])
+
+# 浏览笔记
+@login_required
+def user_notes_view(request):
+    return render(request, 'user_notes.html', context={
+        'userp': get_object_or_404(UserProperty, user=request.user)
+    })
+
+# 编辑笔记
+@login_required
+def user_notes_edit_view(request, id):
+    form = NoteForm()
+    note = get_object_or_404(Note, pk=id)
+    if request.method == 'GET':
+        form = NoteForm(initial={
+            'content': note.content,
+            'shared': note.shared
+        })
+        context = {'form': form, 'note': note}
+        if 'alter' in request.GET:
+            context['alter'] = 'alter'
+        return render(request, 'user_notes_edit.html', context=context)
+    elif 'alter' in request.POST:
+        form = NoteForm(data=request.POST)
+        if form.is_valid():
+            note.shared = form.cleaned_data['shared']
+            note.content = form.cleaned_data['content']
+            note.save()
+            return redirect(reverse('user_notes_edit', args=[note.id, ]) + '?alter=1')
+        return redirect(reverse('user_notes_edit'), args=[note.id, ])
+    elif 'delete' in request.POST:
+        note.delete()
+        return redirect(reverse('user_notes'))
+    raise Http404
+
+

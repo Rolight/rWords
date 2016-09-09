@@ -64,5 +64,5 @@ class NoteForm(forms.Form) :
         label='笔记内容'
     )
     shared = forms.BooleanField(
-        initial=True, label='是否共享'
+        initial=True, label='是否共享', required=False
     )
