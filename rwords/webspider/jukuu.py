@@ -39,11 +39,12 @@ class WebSpider:
                 re_cnt += 1
 
 
-        return pattern.findall(self.content)
+        return pattern.findall(self.content)[:-1]
 
 
 if __name__ == '__main__':
     word = input()
     web = WebSpider()
-    print(web.get_example(word))
+    for s in web.get_example(word):
+        print(s)
 
