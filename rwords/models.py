@@ -40,38 +40,42 @@ class UserProperty(models.Model):
     def review_words(self):
         return [s.word for s in self.learnstate_set.all() if not (s.master or s.too_simple)]
 
-    # 今日待学习单词
+    # 今日要学习新词数量
     def unknown_count(self, today=datetime.now().date()):
-        uc = LearnTask.get_user_tasks(user=self.user, today=today)
+        uc = LearnTask.objects.filter(userproperty=self, build_date=today)
         uc = uc.filter(unknown_flag=True)
         return uc.count()
 
-    # 今日待复习单词
+    # 今日要复习的单词数量
     def review_count(self, today=datetime.now().date()):
-        uc = LearnTask.get_user_tasks(user=self.user, today=today)
+        uc = LearnTask.objects.filter(userproperty=self, build_date=today)
         uc = uc.filter(unknown_flag=False)
         return uc.count()
 
     # 今日总单词
     def word_count(self, today=datetime.now().date()):
-        uc = LearnTask.get_user_tasks(user=self.user, today=today)
+        uc = LearnTask.objects.filter(userproperty=self, build_date=today)
         return uc.count()
 
-    # 已完成的单词
+    # 今日已完成的单词
     def finished_count(self, today=datetime.now().date()):
-        uc = LearnTask.get_user_tasks(user=self.user, today=today)
+        uc = LearnTask.objects.filter(userproperty=self, build_date=today)
         uc = uc.filter(finished=True)
         return uc.count()
 
     # 判断任务是否完成
     def finished(self, today=datetime.now().date()):
-        uc = LearnTask.get_user_tasks(user=self.user, today=today)
+        uc = LearnTask.objects.filter(userproperty=self, build_date=today)
         uc = uc.filter(finished=False)
-        return uc == 0
+        return uc.count() == 0
 
     # 判断是否是新用户
     def newuser(self):
         return LearnState.objects.filter(userproperty=self).count() == 0
+
+    # 获得用户所有笔记
+    def notes(self):
+        return Note.objects.filter(userproperty=self)
 
 
 # 词库
@@ -81,12 +85,22 @@ class Dict(models.Model):
     def __str__(self):
         return self.text
 
+    def examples(self):
+        ret = Example.objects.filter(word=self).all()[:5]
+        return ret
+
+    def synonyms(self):
+        return Synonym.objects.filter(word=self).all()[:5]
+
 
 # 例句
 class Example(models.Model):
     word = models.ForeignKey(Dict, on_delete=models.CASCADE)
     text_eng = models.TextField(null=False, default='')
     text_chs = models.TextField(null=False, default='')
+
+    def __str__(self):
+        return '%s, %s' % (self.text_chs, self.text_eng)
 
 
 # 近义词
@@ -128,6 +142,19 @@ class WordList(models.Model):
     def __str__(self):
         return '%s' % self.word.text
 
+    def shared_notes(self, exclude_user=None):
+        notes = self.note_set.all().filter(shared=True)
+        if exclude_user and UserProperty.objects.filter(user=exclude_user):
+            userp = UserProperty.objects.filter(user=exclude_user).first()
+            notes = notes.exclude(userproperty=userp)
+        return notes
+
+    def user_notes(self, user):
+        userp = UserProperty.objects.filter(user=user).first()
+        if userp is None:
+            return []
+        notes = self.note_set.all().filter(userproperty=userp)
+        return notes
 
 """
     这里写死了笔记必须基于某一个单词本中的单词建立。
@@ -225,9 +252,15 @@ class LearnTask(models.Model):
 
     # 不认识
     def unknown(self):
-        self.remember = False
-        self.finished = False
-        self.save()
+        # 把数据库项删了重新建立防止重复出现
+        task_new = LearnTask(
+            userproperty=self.userproperty,
+            word=self.word,
+            build_date=self.build_date,
+            unknown_flag=self.unknown_flag
+        )
+        self.delete()
+        task_new.save()
 
     # 太简单
     def too_simple(self):
@@ -256,7 +289,6 @@ class LearnTask(models.Model):
         unknown_words = random.sample(unknown_words, unknown)
         review_words = random.sample(review_words, review)
 
-        # 先创建对象然后一次性添加以提高性能
         learn_tasks = []
         for task in unknown_words:
             # 加上判断，防止在用户单词任务生成之前就手动添加过
@@ -284,4 +316,4 @@ class LearnTask(models.Model):
         tasks = userp.learntask_set.all()
         tasks = tasks.filter(build_date=today)
         tasks = tasks.exclude(finished=True)
-        return tasks
+        return tasks.order_by('remember')

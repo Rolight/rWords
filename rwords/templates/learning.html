@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="jumbotron">
+        <div class="row">
+            <h4>
+                <small>
+                    <b>
+                        今日共{{ userp.word_count }}个，已完成{{ userp.finished_count }}个
+                    </b>
+                </small>
+            </h4>
+        </div>
+    <div class="row">
+            <center>
+                <h1>{{ wordlist.word.text }}</h1>
+            </center>
+    </div>
+    <div class="row">
+        <div class="col col-md-8 col-md-offset-2">
+            <form action="{% url 'learning' %}" method="post">
+                {% csrf_token %}
+                <h3>
+                    <button type="submit" class="btn btn-primary btn-lg btn-block" name="known">认识</button>
+                    <button type="submit" class="btn btn-danger btn-lg btn-block" name="unknown">不认识</button>
+                    <button type="submit" class="btn btn-warning btn-lg btn-block" name="too-simple">太简单</button>
+                </h3>
+            </form>
+       </div>
+    </div>
+    </div>
+</div>
+{% endblock %}

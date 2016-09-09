@@ -1,10 +1,15 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, get_user_model
 
-from rwords.views.forms import RegisterForm, LoginForm, LearningSettingsForm
-from rwords.models import UserProperty
+from rwords.views.forms import (
+    RegisterForm, LoginForm, LearningSettingsForm,
+    NoteForm
+)
+from rwords.models import UserProperty, LearnTask, Note
+
+import copy
 
 
 def login_view(request):
@@ -58,4 +63,67 @@ def learning_settings_view(request):
         'form': form,
         'all': 0
     })
+
+# 学习页面
+@login_required
+def learning_view(request):
+    task = LearnTask.get_user_tasks(request.user).first()
+    userp = get_object_or_404(UserProperty, user=request.user)
+    if task is None:
+        redirect(reverse('home_page'))
+    if request.method == 'GET':
+        return render(request, 'learning.html', context={
+            'wordlist': task.word,
+            'userp': userp,
+            'task': task
+        })
+    elif request.method == 'POST':
+        # 判断类型
+        form = NoteForm()
+        alert_text = ''
+        alert_type = 'info'
+        if 'add-note' not in request.POST:
+            # 如果不是提交笔记
+            # 先把任务顺序改变
+            # 根据post类型进行相应操作
+            if 'too-simple' in request.POST:
+                task.too_simple()
+                alert_text = '你已将该单词标记为太简单，将不会再对这个单词进行学习'
+            elif 'unknown' in request.POST:
+                task.unknown()
+                alert_text = '稍后将重新学习这个单词'
+            elif 'known' in request.POST:
+                task.known()
+                if task.finished:
+                    alert_text = '这个单词学习完成，今天将不再出现'
+                    alert_type = 'success'
+                else:
+                    alert_text = '这个单词稍后还需要复习一遍'
+        else:
+            # 添加笔记
+            try:
+                task_id = int(request.POST['task_id'])
+                task = LearnTask.objects.get(id=task_id)
+            except:
+                raise Http404
+            form = NoteForm(data=request.POST)
+            if form.is_valid():
+                Note.objects.create(
+                    userproperty=userp,
+                    word=task.word,
+                    content=form.cleaned_data['content'],
+                    shared=form.cleaned_data['shared']
+                )
+                alert_text = '笔记添加成功'
+
+        return render(request, 'learning_detail.html', context={
+            'wordlist': task.word,
+            'userp': userp,
+            'form': form,
+            'task': task,
+            'alert_text': alert_text,
+            'alert_type': alert_type,
+            'my_notes': task.word.user_notes(request.user),
+            'shared_notes': task.word.shared_notes(exclude_user=request.user)
+        })
 

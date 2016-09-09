@@ -11,6 +11,19 @@
         <p>上传时间: {{ wordbook.pub_date }}</p>
         <p>更新时间: {{ wordbook.update_date }}</p>
         <p>单词数: {{ wordcount }}</p>
+        <p>
+            <a href="{% url 'set_learning_wordbook' wordbook.id %}?next={{ request.path }}">
+                {% if wordbook == learning_wordbook %}
+                <button type="button" class="btn btn-danger">
+                    不再学习
+                </button>
+                {% else %}
+                <button type="button" class="btn btn-primary">
+                    选这本
+                </button>
+                {% endif %}
+            </a>
+        </p>
     </div>
 </div>
 <div class="row">

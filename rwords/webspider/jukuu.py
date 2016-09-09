@@ -44,4 +44,4 @@ class WebSpider:
 if __name__ == '__main__':
     word = input()
     web = WebSpider()
-    web.get_example(word)
+    print(web.get_example(word))

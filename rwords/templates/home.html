@@ -13,7 +13,7 @@
         </h3>
         {% if not userp.finished %}
         <h3>
-            <a href="#">
+            <a href="{% url 'learning' %}">
                 <button type="button" class="btn btn-success btn-lg">
                     开始学习
                 </button>
@@ -27,14 +27,14 @@
         <h3>
             <small>
                 新用户？
-                <a href="#">去设置学习量和单词书</a>
+                <a href="{% url 'learning_settings' %}">去设置学习量和单词书</a>
             </small>
         </h3>
         {% elif not userp.learning_wordbook %}
         <h3>
             <small>
                 还没有选择单词书？
-                <a href="#">去选择</a>
+                <a href="{% url 'wordbook_library' 0 %}">去选择</a>
             </small>
         </h3>
         {% endif %}

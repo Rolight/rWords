@@ -56,3 +56,13 @@ class LearningSettingsForm(forms.Form):
         widget=forms.NumberInput(attrs={'class': 'form-control'})
     )
 
+# 笔记表单
+class NoteForm(forms.Form) :
+    content = forms.CharField(
+        widget=forms.Textarea(attrs={'class': 'form-control', 'cols': '30', 'rows': '3'}),
+        required=True,
+        label='笔记内容'
+    )
+    shared = forms.BooleanField(
+        initial=True, label='是否共享'
+    )

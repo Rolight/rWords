@@ -29,10 +29,16 @@
                     </div>
                 </div>
                 {% else %}
-                无 <a href="{% url 'wordbook_library' all  %}"><button type="button" class="btn btn-success">去挑选</button></a>
+                <p>无</p>
+                <p>
+                    <a href="{% url 'wordbook_library' all  %}">
+                        <button type="button" class="btn btn-success">去挑选</button>
+                    </a>
+                </p>
                 {% endif %}
             </div>
         </div>
+        <hr>
         <div class="row">
             <p>每日学习量: <span class="label label-primary">{{ userp.amount }}</span></p>
         </div>

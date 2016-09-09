@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="jumbotron">
+        <!-- 提示消息区域 ---------------------------------------------------->
+        {% if alert_text %}
+        <div class="alert alert-{{ alert_type }}" role="alert">{{ alert_text }}</div>
+        {% endif %}
+        <!-- 单词信息区域 ---------------------------------------------------->
+        <div class="row" name="word-main">
+            <h1>
+                {{ wordlist.word.text }}
+                <small>
+                    <a href="{% url 'learning' %}">
+                        <button type="button" class="btn btn-default">
+                            下一个
+                        </button>
+                    </a>
+                </small>
+            </h1>
+            <h3><small><b>{{ wordlist.definition|safe }}</b></small></h3>
+            <h4>
+                    <small>近义词：</small>
+                    {% for syn in wordlist.word.synonyms %}
+                        <span class="label label-primary label-lg">{{ syn.text }}</span>
+                    {% endfor %}
+            </h4>
+        </div>
+        <hr>
+        <!-- 例句区域 ------------------------------------------------------->
+        <div class="row" name="word-synonyms">
+            <h4>例句</h4>
+            {% for example in wordlist.word.examples %}
+            <h4><small>
+                {{ forloop.counter }}. {{ example.text_eng|safe }}
+            </small></h4>
+            <h4><small> {{ example.text_chs|safe }}</small></h4>
+            {% endfor %}
+        </div>
+        <hr>
+        <!-- 我的笔记区域 ------------------------------------------------------->
+        <div class="row" name="word-my-notes">
+            <h4>我的笔记</h4>
+            {% if my_notes %}
+            {% for note in my_notes %}
+            <h4>
+                <small>
+                   {{ forloop.counter}}. {{ note.content }}
+                </small>
+            </h4>
+            {% endfor %}
+            {% else %}
+            <h4><small>无</small></h4>
+            {% endif %}
+        </div>
+        <hr>
+        <!-- 共享笔记区域 ------------------------------------------------------->
+        <div class="row" name="word-shared-notes">
+            <h4>共享笔记</h4>
+            {% if shared_notes %}
+            {% for note in shared_notes %}
+            <h4>
+                <small>
+                    {{ forloop.counter}}. {{ note.content }}
+                </small>
+            </h4>
+            {% endfor %}
+            {% else %}
+            <h4><small>无</small></h4>
+            {% endif %}
+        </div>
+        <hr>
+        <!-- 添加笔记表单 ------------------------------------------------------->
+        <div class="row" name="word-add-notes">
+            <h3><small>添加笔记<small></h3>
+            <form action="{% url 'learning' %}" method="post">
+                {% csrf_token %}
+                {{ form.as_table }}
+                <input name="task_id" type="hidden" value="{{ task.id }}">
+                <p>
+                    <button type="submit" class="btn btn-default" name="add-note">
+                        添加
+                    </button>
+                </p>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
