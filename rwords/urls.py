@@ -19,7 +19,8 @@ from django.contrib import admin
 from .views.home import home_page
 from .views.user import (
     login_view, register_view, logout_view,
-    learning_settings_view, learning_view
+    learning_settings_view, learning_view, learning_state_view,
+    learning_state_forget_view
 )
 from .views.wordbook import (
     create_wordbook_view, wordbook_view, wordbook_library_view,
@@ -35,6 +36,8 @@ urlpatterns = [
     url(r'^user/logout/$', logout_view, name='logout'),
     url(r'^user/learning/settings/$', learning_settings_view, name='learning_settings'),
     url(r'^user/learning/$', learning_view, name='learning'),
+    url(r'^user/learning/state/$', learning_state_view, name='learning_state'),
+    url(r'^user/learning/state/forgot/(\d+)/$', learning_state_forget_view, name='learning_state_forgot'),
 
     url(r'^wordbook/new/$', create_wordbook_view, name='create_wordbook'),
     url(r'^wordbook/(\d+)/$', wordbook_view, name='wordbook'),

@@ -77,6 +77,10 @@ class UserProperty(models.Model):
     def notes(self):
         return Note.objects.filter(userproperty=self)
 
+    # 获得用户的所有学习记录
+    def learnstates(self):
+        return self.learnstate_set.all()
+
 
 # 词库
 class Dict(models.Model):
@@ -200,17 +204,25 @@ class LearnState(models.Model):
             ret += ', too_simple'
         return ret
 
+    def state_str(self):
+        if self.master:
+            return '已经掌握'
+        if self.too_simple:
+            return '太简单'
+        return '学习中，熟练度-%d' % self.familiar_level
+
     # 我忘了
-    def forget(self):
+    def forgot(self):
         task = LearnTask.objects.get_or_create(
             userproperty=self.userproperty,
-            word=self.word
+            word=self.word,
+            build_date=datetime.now().date()
         )[0]
         task.build_date = datetime.now().date()
         task.remember = False
         task.finished = False
-        task.unknown = True
-        self.userproperty.get_diary().update()
+        task.unknown_flag = True
+        task.save()
         self.delete()
 
 

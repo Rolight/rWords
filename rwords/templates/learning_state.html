@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %} 查看单词书 {% endblock %}
+{% block content %}
+<div class="row">
+    <div class="page-header">
+        <h1>我学习过的单词</h1>
+        <h3>
+            <small>
+                我一共有{{ learnstates.count }}条学习记录
+            </small>
+        </h3>
+    </div>
+</div>
+<div class="row">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>单词</th>
+                    <th>单词书</th>
+                    <th>释义</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for state in learnstates %}
+                <tr class="
+                    {% if state.master %}
+                        success
+                    {% elif state.too_simple %}
+                    {% else %}
+                        active
+                    {% endif %}
+                 ">
+                    <th scope="row">{{ state.word.word.text }}</th>
+                    <td>{{ state.word.wordbook.name }}</td>
+                    <td>{{ state.word.definition|safe }}</td>
+                    <td>{{ state.state_str }}</td>
+                    <td>
+                        <a href="{% url 'learning_state_forgot' state.id %}?next={{ request.path }}">
+                            <button class="btn btn-danger" type="button">
+                                我忘了
+                            </button>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+</div>
+{% endblock %}

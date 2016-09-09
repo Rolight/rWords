@@ -7,7 +7,7 @@ from rwords.views.forms import (
     RegisterForm, LoginForm, LearningSettingsForm,
     NoteForm
 )
-from rwords.models import UserProperty, LearnTask, Note
+from rwords.models import UserProperty, LearnTask, Note, LearnState
 
 import copy
 
@@ -127,3 +127,17 @@ def learning_view(request):
             'shared_notes': task.word.shared_notes(exclude_user=request.user)
         })
 
+# 我的词库页面
+@login_required
+def learning_state_view(request):
+    userp = get_object_or_404(UserProperty, user=request.user)
+    return render(request, 'learning_state.html', context={
+        'learnstates': userp.learnstates()
+    })
+
+# 忘记单词
+@login_required
+def learning_state_forget_view(request, id):
+    state = get_object_or_404(LearnState, pk=id)
+    state.forgot()
+    return redirect(request.GET['next'])
