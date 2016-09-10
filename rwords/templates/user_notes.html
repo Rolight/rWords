@@ -34,7 +34,7 @@
         <ul class="pager">
             <li class="step-links">
                 {% if notes.has_previous %}
-                    <a href="?page={{ notes.previous_page_number }}">previous</a>
+                    <a href="?page={{ notes.previous_page_number }}">上一页</a>
                 {% endif %}
 
                 <span class="current">
@@ -42,7 +42,7 @@
                 </span>
 
                 {% if notes.has_next %}
-                    <a href="?page={{ notes.next_page_number }}">next</a>
+                    <a href="?page={{ notes.next_page_number }}">下一页</a>
                 {% endif %}
             </li>
         </ul>

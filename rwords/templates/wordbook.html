@@ -50,7 +50,7 @@
     <ul class="pager">
         <li class="step-links">
             {% if wordlist.has_previous %}
-                <a href="?page={{ wordlist.previous_page_number }}">previous</a>
+                <a href="?page={{ wordlist.previous_page_number }}">上一页</a>
             {% endif %}
 
             <span class="current">
@@ -58,7 +58,7 @@
             </span>
 
             {% if wordlist.has_next %}
-                <a href="?page={{ wordlist.next_page_number }}">next</a>
+                <a href="?page={{ wordlist.next_page_number }}">下一页</a>
             {% endif %}
         </li>
     </ul>
