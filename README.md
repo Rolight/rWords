@@ -109,6 +109,7 @@
 /user/notes/
 - 修改用户笔记
 /user/notes/edit/(ind:id)/
+
 #### 单词书相关
 - 创建单词书
 /wordbook/new/
@@ -118,6 +119,7 @@
 /wordbook/library/(int:id)/
 - 设置为学习&不学习
 /wordbook/set/learning/(int:id)/
+
 #### 单词相关
 - 查询单词
-/word/$
+/word/?word=(str)
