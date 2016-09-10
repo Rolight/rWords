@@ -46,4 +46,21 @@
         </table>
     </div>
 </div>
+<div class="row">
+    <ul class="pager">
+        <li class="step-links">
+            {% if wordlist.has_previous %}
+                <a href="?page={{ wordlist.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                第 {{ wordlist.number }} 页，共 {{ wordlist.paginator.num_pages }}页
+            </span>
+
+            {% if wordlist.has_next %}
+                <a href="?page={{ wordlist.next_page_number }}">next</a>
+            {% endif %}
+        </li>
+    </ul>
+</div>
 {% endblock %}

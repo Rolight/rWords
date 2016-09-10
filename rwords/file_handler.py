@@ -34,7 +34,7 @@ def load_dict(file_path, wordbook, output=True, spider=False):
         WordList.objects.bulk_create(wordlist)
         if output:
             print('成功导入%d个单词' % len(dlist))
-        if spider or settings.AUTO_SPIDER:
+        if spider or settings.auto_spider:
             upgrade_dict()
     except Exception:
         print(Exception.with_traceback())

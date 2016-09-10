@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, get_user_model
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from rwords.views.forms import CreateWordBookForm
 from rwords.file_handler import dict_file_handler
@@ -33,11 +34,22 @@ def create_wordbook_view(request):
 def wordbook_view(request, id):
     wordbook = get_object_or_404(WordBook, pk=id)
     wordlist = WordList.objects.filter(wordbook=wordbook)
+    wordcount = wordlist.count()
     userp = get_object_or_404(UserProperty, user=request.user)
+
+    paginator = Paginator(wordlist, 20)
+    page_index = request.GET.get('page')
+    try:
+        wordlist = paginator.page(page_index)
+    except PageNotAnInteger:
+        wordlist = paginator.page(1)
+    except EmptyPage:
+        wordlist = paginator.page(paginator.num_pages)
+
     return render(request, 'wordbook.html', context={
         'wordbook': wordbook,
         'wordlist': wordlist,
-        'wordcount': wordlist.count(),
+        'wordcount': wordcount,
         'learning_wordbook': userp.learning_wordbook,
         'userp': userp
     })
@@ -57,6 +69,14 @@ def wordbook_library_view(request, id):
             author=user
         )
         title = '%s上传的单词书' % user.username
+    paginator = Paginator(wordbook_list, 20)
+    page_index = request.GET.get('page')
+    try:
+        wordbook_list = paginator.page(page_index)
+    except PageNotAnInteger:
+        wordbook_list = paginator.page(1)
+    except EmptyPage:
+        wordbook_list = paginator.page(paginator.num_pages)
     userp = get_object_or_404(UserProperty, user=request.user)
     return render(request, 'wordbook_library.html', context={
         'wordbook_list': wordbook_list,

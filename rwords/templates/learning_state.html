@@ -48,4 +48,21 @@
             </tbody>
         </table>
 </div>
+<div class="row">
+    <ul class="pager">
+        <li class="step-links">
+            {% if learnstates.has_previous %}
+                <a href="?page={{ learnstates.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                第 {{ learnstates.number }} 页，共 {{ learnstates.paginator.num_pages }}页
+            </span>
+
+            {% if learnstates.has_next %}
+                <a href="?page={{ learnstates.next_page_number }}">next</a>
+            {% endif %}
+        </li>
+    </ul>
+</div>
 {% endblock %}

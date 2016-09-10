@@ -12,7 +12,7 @@
         <!-- 我的笔记区域 ------------------------------------------------------->
         <div class="row">
             <div class="list-group">
-                {% for note in userp.user_notes %}
+                {% for note in notes %}
                 <a href="{% url 'user_notes_edit' note.id %}" class="
                 {% if note.shared %} list-group-item
                 {% else %} list-group-item list-group-item-info
@@ -22,7 +22,7 @@
                         {{ forloop.counter}}. {{ note.word.word.text }}
                         <small>来自 {{ note.word.wordbook.name }}</small>
                     </h4>
-                    <p>{{ note.content }}</p>
+                    <p>笔记内容：{{ note.content }}</p>
                     {% if not note.shared %}
                     <h6>非公开笔记</h6>
                     {% endif %}
@@ -30,6 +30,23 @@
                 {% endfor %}
             </div>
         </div>
+        <div class="row">
+        <ul class="pager">
+            <li class="step-links">
+                {% if notes.has_previous %}
+                    <a href="?page={{ notes.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    第 {{ notes.number }} 页，共 {{ notes.paginator.num_pages }}页
+                </span>
+
+                {% if notes.has_next %}
+                    <a href="?page={{ notes.next_page_number }}">next</a>
+                {% endif %}
+            </li>
+        </ul>
     </div>
+        </div>
 </div>
 {% endblock %}

@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.http import HttpResponse, Http404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, get_user_model
+from django.core.paginator import PageNotAnInteger, Paginator, EmptyPage
 
 from rwords.views.forms import (
     RegisterForm, LoginForm, LearningSettingsForm,
@@ -133,8 +134,20 @@ def learning_view(request):
 @login_required
 def learning_state_view(request):
     userp = get_object_or_404(UserProperty, user=request.user)
+    learnstates = userp.learnstates()
+
+    paginator = Paginator(learnstates, 20)
+    page_index = request.GET.get('page')
+
+    try:
+        learnstates = paginator.page(page_index)
+    except PageNotAnInteger:
+        learnstates = paginator.page(1)
+    except EmptyPage:
+        learnstates = paginator.page(paginator.num_pages)
+
     return render(request, 'learning_state.html', context={
-        'learnstates': userp.learnstates()
+        'learnstates': learnstates
     })
 
 # 忘记单词
@@ -147,8 +160,22 @@ def learning_state_forget_view(request, id):
 # 浏览笔记
 @login_required
 def user_notes_view(request):
+    userp = get_object_or_404(UserProperty, user=request.user)
+    notes = userp.user_notes()
+
+    paginator = Paginator(notes, 10)
+    page_index = request.GET.get('page')
+
+    try:
+        notes = paginator.page(page_index)
+    except PageNotAnInteger:
+        notes = paginator.page(1)
+    except EmptyPage:
+        notes = paginator.page(paginator.num_pages)
+
+
     return render(request, 'user_notes.html', context={
-        'userp': get_object_or_404(UserProperty, user=request.user)
+        'userp': userp, 'notes': notes
     })
 
 # 编辑笔记

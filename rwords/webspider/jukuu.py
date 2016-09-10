@@ -42,7 +42,7 @@ class WebSpider:
                 print('连接失败，正在尝试重新连接')
                 re_cnt += 1
 
-
+        time.sleep(55)
         return pattern.findall(self.content)[:-1]
 
 
