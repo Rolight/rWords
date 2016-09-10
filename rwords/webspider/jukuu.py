@@ -4,7 +4,6 @@ import sys
 import urllib.request
 import re
 import socket
-import socks
 
 import time
 
@@ -19,8 +18,6 @@ class WebSpider:
     resp = None
 
     def get_example(self, word):
-        socks.set_default_proxy(socks.SOCKS5, 'localhost', 1080)
-        socket.socket = socks.socksocket
         print('finding example of word "%s"...' % word)
         self.opener = urllib.request.build_opener()
         self.opener.addheaders = [

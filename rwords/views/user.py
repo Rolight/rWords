@@ -135,6 +135,7 @@ def learning_view(request):
 def learning_state_view(request):
     userp = get_object_or_404(UserProperty, user=request.user)
     learnstates = userp.learnstates()
+    count = learnstates.count()
 
     paginator = Paginator(learnstates, 20)
     page_index = request.GET.get('page')
@@ -147,7 +148,8 @@ def learning_state_view(request):
         learnstates = paginator.page(paginator.num_pages)
 
     return render(request, 'learning_state.html', context={
-        'learnstates': learnstates
+        'learnstates': learnstates,
+        'count': count
     })
 
 # 忘记单词
