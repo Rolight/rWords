@@ -37,39 +37,39 @@ class TestLearningTask(TestCase):
         w1, w2 = self.load_wordbook()
         # 创建用户
         user, userp = self.create_user('learner')
-        # 这个用户想学500个单词，可是单词书里面只有100个
+        # 这个用户想学500个单词，可是单词书里面只有11个
         userp.amount = 500
         userp.learning_wordbook = w1
         userp.save()
-        self.assertEqual(userp.learning_wordbook.wordlist_set.all().count(), 100)
+        self.assertEqual(userp.learning_wordbook.wordlist_set.all().count(), 11)
         # 用户还是不改变注意，开始了学习
         tasks = LearnTask.get_user_tasks(user)
-        # 用户发现自己今天的学习任务还是100个单词
-        self.assertEqual(tasks.count(), 100)
+        # 用户发现自己今天的学习任务还是10个单词
+        self.assertEqual(tasks.count(), 11)
 
     # 测试用户获取学习任务的是否不会得到不是今天的内容
     def test_generate_task_not_exists_yesterday_task(self):
         w1, w2 = self.load_wordbook()
         user, userp = self.create_user('learner')
-        userp.amount = 10
+        userp.amount = 5
         userp.learning_wordbook = w1
         userp.save()
-        # 用户在2016年9月8日学习10个单词
+        # 用户在2016年9月8日学习5个单词
         today = datetime.now().date()
         tasks = LearnTask.get_user_tasks(user, today=today)
-        self.assertEqual(tasks.count(), 10)
+        self.assertEqual(tasks.count(), 5)
         # 时间过得飞快，转眼间来到了9月9日
         # 用户觉得自己昨天学的太少，增加了单词数量
-        userp.amount = 15
+        userp.amount = 6
         userp.save()
         today1 = today + timedelta(days=1)
         # 用户发现自己的任务表里面昨天的单词已经不见了
-        # 今天的任务是全新布置的15个单词
+        # 今天的任务是全新布置的6个单词
         tasks = LearnTask.get_user_tasks(user, today=today1)
         #print(userp.get_diary(today1))
-        self.assertEqual(tasks.count(), 15)
+        self.assertEqual(tasks.count(), 6)
         self.assertEqual(tasks.filter(build_date=today).count(), 0)
-        self.assertEqual(tasks.filter(build_date=today1).count(), 15)
+        self.assertEqual(tasks.filter(build_date=today1).count(), 6)
 
     # 测试认识
     def test_known(self):
